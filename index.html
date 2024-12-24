@@ -1,7 +1,9 @@
 <html><head><base href="/" />
 <title>WiFitics</title>
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/x-icon" href="https://tikolu.net/i/jhvwl">
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIldpRml0aWNzIiwKICAic2hvcnRfbmFtZSI6ICJXaUZpdGljcyIsCiAgImRlc2NyaXB0aW9uIjogIkdldCBXaUZpIEFueXdoZXJlIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmFmYmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzJjM2U1MCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vZXhhbXBsZS5jb20vU2NyZWVuc2hvdCAyMDI0LTEyLTI0IDEwLjQxLjQ5X2NsZWFudXAucG5nIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2c3e50">
 <style>
 :root {
   --primary: #2c3e50;
@@ -14,13 +16,14 @@ body {
   font-family: 'Ubuntu', sans-serif;
   background: #fafbff;
   color: #2c3e50;
+  min-width: 320px;
 }
 
 .header {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 1.2rem 2rem;
+  padding: 1rem 1.5rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
@@ -31,12 +34,12 @@ body {
 }
 
 .logo {
-  height: 40px;
+  height: 32px;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .brand {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--primary);
   font-weight: 700;
   letter-spacing: -0.5px;
@@ -46,13 +49,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6rem 2rem;
+  padding: 4rem 1rem;
   gap: 2rem;
 }
 
 .get-wifi-btn {
-  padding: 1.2rem 3rem;
-  font-size: 1.3rem;
+  padding: 1rem 2.5rem;
+  font-size: clamp(1rem, 3vw, 1.3rem);
   background: var(--gradient);
   color: white;
   border: none;
@@ -62,6 +65,8 @@ body {
   font-weight: 600;
   box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2);
   font-family: 'Ubuntu', sans-serif;
+  width: fit-content;
+  max-width: 90%;
 }
 
 .get-wifi-btn:hover {
@@ -83,10 +88,12 @@ body {
   justify-content: center;
   gap: 2rem;
   z-index: 1000;
+  padding: 1rem;
+  text-align: center;
 }
 
 .progress-bar {
-  width: 300px;
+  width: min(300px, 90vw);
   height: 12px;
   background: #eef2f7;
   border-radius: 100px;
@@ -103,15 +110,16 @@ body {
 .wifi-list {
   display: none;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
   max-width: 1200px;
-  padding: 2rem;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .wifi-card {
   background: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   cursor: pointer;
@@ -121,7 +129,7 @@ body {
 
 .wifi-card h3 {
   margin: 0 0 1rem 0;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--primary);
 }
@@ -129,7 +137,7 @@ body {
 .wifi-card p {
   margin: 0.5rem 0;
   color: #64748b;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .wifi-card:hover {
@@ -140,17 +148,71 @@ body {
 
 .notification {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1rem;
+  right: 1rem;
   background: var(--gradient);
   color: white;
-  padding: 1.2rem 2.5rem;
+  padding: 1rem 2rem;
   border-radius: 15px;
   transform: translateX(200%);
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  max-width: 90vw;
+  box-sizing: border-box;
+}
+
+.install-prompt {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 90vw;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.install-btn {
+  padding: 0.8rem 1.5rem;
+  background: var(--gradient);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.8rem 1rem;
+  }
+  
+  .logo {
+    height: 28px;
+  }
+  
+  .brand {
+    font-size: 1.2rem;
+  }
+  
+  .main {
+    padding: 3rem 1rem;
+  }
+  
+  .wifi-card {
+    padding: 1.2rem;
+  }
 }
 </style>
 </head>
@@ -177,7 +239,41 @@ body {
     Connected! You now have WiFi anywhere you go! 🌍✨
   </div>
 
+  <div class="install-prompt">
+    <span>Install WiFitics for the best experience!</span>
+    <button class="install-btn">Install</button>
+  </div>
+
 <script>
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(err => console.log('Service worker registration failed:', err));
+  });
+}
+
+let deferredPrompt;
+const installPrompt = document.querySelector('.install-prompt');
+const installBtn = document.querySelector('.install-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installPrompt.style.display = 'flex';
+});
+
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      console.log('User accepted the installation');
+    }
+    deferredPrompt = null;
+    installPrompt.style.display = 'none';
+  }
+});
+
 const wifiNetworks = [
   { name: "Ultra-Fast 5G", strength: "Excellent", speed: "1 Gbps" },
   { name: "Quantum Network", strength: "Excellent", speed: "10 Gbps" },
@@ -192,18 +288,14 @@ document.querySelector('.get-wifi-btn').addEventListener('click', async () => {
   const progress = document.querySelector('.progress');
   const wifiList = document.querySelector('.wifi-list');
   
-  // Show loading screen
   loadingScreen.style.display = 'flex';
   progress.style.width = '100%';
   
-  // Wait for loading animation
   await new Promise(resolve => setTimeout(resolve, 3000));
   
-  // Hide loading screen and show WiFi list
   loadingScreen.style.display = 'none';
   wifiList.style.display = 'grid';
   
-  // Generate WiFi cards
   wifiList.innerHTML = wifiNetworks.map(network => `
     <div class="wifi-card">
       <h3>${network.name}</h3>
