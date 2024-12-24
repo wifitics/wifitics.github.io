@@ -1,0 +1,226 @@
+<html><head><base href="/" />
+<title>WiFitics - WiFi Anywhere</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #2c3e50;
+  --accent: #4cd6ff;
+  --gradient: linear-gradient(135deg, #4cd6ff, #3498db);
+}
+
+body {
+  margin: 0;
+  font-family: 'Ubuntu', sans-serif;
+  background: #fafbff;
+  color: #2c3e50;
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 1.2rem 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  height: 40px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.brand {
+  font-size: 1.6rem;
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 2rem;
+  gap: 2rem;
+}
+
+.get-wifi-btn {
+  padding: 1.2rem 3rem;
+  font-size: 1.3rem;
+  background: var(--gradient);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2);
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.get-wifi-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(52, 152, 219, 0.3);
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  z-index: 1000;
+}
+
+.progress-bar {
+  width: 300px;
+  height: 12px;
+  background: #eef2f7;
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress {
+  width: 0%;
+  height: 100%;
+  background: var(--gradient);
+  transition: width 3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wifi-list {
+  display: none;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem;
+}
+
+.wifi-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.wifi-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.wifi-card p {
+  margin: 0.5rem 0;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.wifi-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  border-color: var(--accent);
+}
+
+.notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--gradient);
+  color: white;
+  padding: 1.2rem 2.5rem;
+  border-radius: 15px;
+  transform: translateX(200%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+</style>
+</head>
+<body>
+  <div class="header">
+    <img src="Screenshot 2024-12-24 10.41.49_cleanup.png" alt="WiFitics Logo" class="logo">
+    <div class="brand">WiFitics</div>
+  </div>
+
+  <div class="main">
+    <button class="get-wifi-btn">Get WiFi</button>
+  </div>
+
+  <div class="loading-screen">
+    <h2>Scanning for Available Networks...</h2>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+
+  <div class="wifi-list"></div>
+  
+  <div class="notification">
+    Connected! You now have WiFi anywhere you go! 🌍✨
+  </div>
+
+<script>
+const wifiNetworks = [
+  { name: "Ultra-Fast 5G", strength: "Excellent", speed: "1 Gbps" },
+  { name: "Quantum Network", strength: "Excellent", speed: "10 Gbps" },
+  { name: "Global Connect", strength: "Good", speed: "500 Mbps" },
+  { name: "Space Link", strength: "Excellent", speed: "2 Gbps" },
+  { name: "Cloud Net", strength: "Very Good", speed: "750 Mbps" },
+  { name: "Infinite Web", strength: "Excellent", speed: "5 Gbps" }
+];
+
+document.querySelector('.get-wifi-btn').addEventListener('click', async () => {
+  const loadingScreen = document.querySelector('.loading-screen');
+  const progress = document.querySelector('.progress');
+  const wifiList = document.querySelector('.wifi-list');
+  
+  // Show loading screen
+  loadingScreen.style.display = 'flex';
+  progress.style.width = '100%';
+  
+  // Wait for loading animation
+  await new Promise(resolve => setTimeout(resolve, 3000));
+  
+  // Hide loading screen and show WiFi list
+  loadingScreen.style.display = 'none';
+  wifiList.style.display = 'grid';
+  
+  // Generate WiFi cards
+  wifiList.innerHTML = wifiNetworks.map(network => `
+    <div class="wifi-card">
+      <h3>${network.name}</h3>
+      <p>Signal Strength: ${network.strength}</p>
+      <p>Speed: ${network.speed}</p>
+    </div>
+  `).join('');
+});
+
+document.querySelector('.wifi-list').addEventListener('click', (e) => {
+  if (e.target.closest('.wifi-card')) {
+    const notification = document.querySelector('.notification');
+    notification.style.transform = 'translateX(0)';
+    
+    setTimeout(() => {
+      notification.style.transform = 'translateX(200%)';
+    }, 3000);
+  }
+});
+</script>
+</body></html>
